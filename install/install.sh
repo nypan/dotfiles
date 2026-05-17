@@ -21,6 +21,10 @@ main() {
   fi
 
   echo "Running Ansible playbook..."
+  ansible-playbook ansible-install.yml -v
+
+  echo "Installation complete!"
+  echo "Please log out and log back in for all changes to take effect."
 }
 
 
