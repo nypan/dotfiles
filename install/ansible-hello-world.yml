@@ -1,0 +1,21 @@
+---
+- name: Hello world
+  hosts: localhost
+  become: true
+  gather_facts: yes
+  tasks:
+    - name: First step
+      shell: echo "Hello World"
+      register: echo_results
+
+    - name: Display results
+      debug: msg="{{ echo_results.stdout_lines }}"
+
+
+    - name: Display who run this playbook
+      debug:
+        msg: "This user run this user:{{ ansible_facts['env']['SUDO_USER'] }}"
+
+#    - name: Display all ansible facts (prints a lot!!!)
+#      debug:
+#        var: ansible_facts

@@ -1,0 +1,102 @@
+---
+- name: Workstation setup
+  hosts: localhost
+  become: true
+  gather_facts: yes
+  collections:
+    - community.general
+
+  # enable task debugging
+  debugger: on_failed
+  vars_prompt:
+    - name: git_name
+      prompt: "Please enter your git user.name"
+      private: no
+      default: "Anders Nyberg"
+
+    - name: git_email
+      prompt: "Please enter your git user.email"
+      private: no
+      default: "nypananders@gmail.com"
+
+  vars:
+    user: "{{ ansible_facts['env']['SUDO_USER'] }}" 
+    home: "/home/{{ ansible_facts['env']['SUDO_USER'] }}"
+
+  tasks:
+    - name: Display stuff
+      debug:
+        msg: "OS user: >{{ user }}< ,home dir: >{{ home }}< , Git info {{ git_name }} , {{ git_email }}"
+        
+    - name: Perform a distribution upgrade
+      ansible.builtin.apt:
+        upgrade: dist
+        update_cache: yes
+
+    - name: Check if a reboot is required
+      ansible.builtin.stat:
+        path: /var/run/reboot-required
+        get_checksum: no
+      register: reboot_file
+
+    - name: Reboot the server if required
+      ansible.builtin.reboot:
+      when: reboot_file.stat.exists
+
+    - name: Remove unused dependencies
+      ansible.builtin.apt:
+        autoremove: yes
+
+    - name: Update apt cache and install stow
+      ansible.builtin.apt:
+        name: stow
+        state: present
+        update_cache: yes
+      
+      
+    - name: Install git 
+      ansible.builtin.apt:
+        name: git
+        state: present
+        update_cache: yes
+
+    - name: Display global gitconfig 
+      community.general.git_config_info: 
+        scope: file
+        path: "{{home}}/.gitconfig"
+      register: result_config
+
+    - name: Dump git config 
+      ansible.builtin.debug:
+        msg: "{{ result_config | default('(not set)', true) }}"
+
+    - name: Add alias st setting to ~/.gitconfig
+      community.general.git_config:
+        name: alias.st
+        scope: file
+        file: "{{home}}/.gitconfig"
+        value: status
+
+    - name: Add email to gitconfig
+      community.general.git_config:     
+        name: user.email
+        scope: file
+        file: "{{home}}/.gitconfig"
+        value: "{{git_email}}"
+
+    - name: Add name to gitconfig 
+      community.general.git_config:
+        name: user.name
+        scope: file
+        file: "{{home}}/.gitconfig"
+        value: "{{git_name}}"
+
+    - name: Install essential packages
+      ansible.builtin.apt:
+        name:
+          - htop
+          - unzip
+          - wget
+          - jq
+        state: present
+        update_cache: yes
