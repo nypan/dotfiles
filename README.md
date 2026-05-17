@@ -1,7 +1,7 @@
 # dotfiles
 My personal dotfiles and apps installed in ubuntu desktop
 
-inspiration from [https://github.com/Piotr1215/dotfiles](ihttps://github.com/Piotr1215/dotfiles)
+inspiration from [Piotrl1215](ihttps://github.com/Piotr1215/dotfiles)
 
 ## Development
 
