@@ -5,8 +5,8 @@ inspiration from [https://github.com/Piotr1215/dotfiles](ihttps://github.com/Pio
 
 ## Development
 
-Install VirtualBox and add a Ubuntu VM 26.04
-
+Install VirtualBox and add a Ubuntu VM 24.04 (Ansible repo not supporting 26.04 / 2026-05-17)
+Guide [Install VirtualBox](https://www.youtube.com/watch?v=Iddly8Ml3gE)
 
 ## Installation 
 
