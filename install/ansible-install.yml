@@ -52,6 +52,17 @@
         name: stow
         state: present
         update_cache: yes
+
+    - name: Stow dotfiles 
+      command: stow -v -t ~ . --adopt
+      args: 
+        chdir: "{{ playbook_dir }}/.." # Go up one directory to dotfiles root
+      register: stow_result
+
+    - name: Show stow result
+      debug:
+        var: stow_result.stdout_lines 
+      when: stow_result.stdout_lines is defined
       
       
     - name: Install git 
@@ -98,5 +109,12 @@
           - unzip
           - wget
           - jq
+          - bat
+          - xclip
+          - curl
+          - ffmpeg
+          - fd-find
+          - tree
+          - ripgrep
         state: present
         update_cache: yes
