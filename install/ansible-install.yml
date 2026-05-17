@@ -118,3 +118,15 @@
           - ripgrep
         state: present
         update_cache: yes
+
+    - name: Download Neovim AppImage
+      ansible.builtin.get_url:
+        url: "https://github.com/neovim/neovim/releases/latest/download/nvim.appimage"
+        dest: /usr/local/bin/nvim
+        mode: '0755'
+
+    - name: Create a symlink for nvim (Optional)
+      ansible.builtin.file:
+        src: /usr/local/bin/nvim
+        dest: /usr/bin/nvim
+        state: link
