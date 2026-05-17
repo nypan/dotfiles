@@ -59,7 +59,7 @@
         cmd: "stow . -t $TARGET -d $DEST"
       environment:
         TARGET: "{{home}}"
-        DEST: "{{home}}/dotfiles" 
+        DEST: "{{ playbook_dir }}/.."  # Go up one directory to dotfiles root
       
     - name: Install git 
       ansible.builtin.apt:
