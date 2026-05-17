@@ -53,17 +53,13 @@
         state: present
         update_cache: yes
 
-    - name: Stow dotfiles 
-      command: stow -v -t ~ . --adopt
-      args: 
-        chdir: "{{ playbook_dir }}/.." # Go up one directory to dotfiles root
-      register: stow_result
 
-    - name: Show stow result
-      debug:
-        var: stow_result.stdout_lines 
-      when: stow_result.stdout_lines is defined
-      
+    - name: Install .config with stow
+      ansible.builtin.shell:
+        cmd: "stow . -t $TARGET -d $DEST"
+      environment:
+        TARGET: "{{home}}"
+        DEST: "{{home}}/dotfiles" 
       
     - name: Install git 
       ansible.builtin.apt:
